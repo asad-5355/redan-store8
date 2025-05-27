@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مطعم ريدان المندي</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      background-color: #fff8f0;
+      color: #333;
+    }
+
+    header {
+      background-color: #8b0000;
+      color: white;
+      text-align: center;
+      padding: 1em;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    main {
+      padding: 2em;
+    }
+
+    .menu-section {
+      margin-bottom: 3em;
+    }
+
+    .menu-section h2 {
+      color: #8b0000;
+      border-bottom: 2px solid #8b0000;
+      padding-bottom: 0.3em;
+    }
+
+    .product-card {
+      border: 1px solid #ddd;
+      padding: 1em;
+      margin: 1em 0;
+      background-color: #fafafa;
+    }
+
+    .product-card img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+    }
+
+    .product-card h3 {
+      margin: 0.5em 0;
+    }
+
+    button {
+      background-color: #e63946;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .cart {
+      background-color: #f9f9f9;
+      padding: 2em;
+      border-top: 2px solid #e63946;
+    }
+
+    #cart-items {
+      list-style: none;
+      padding: 0;
+    }
+
+    .whatsapp-button {
+      display: inline-block;
+      background-color: #25d366;
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      margin-top: 1em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1em;
+      background-color: #eee;
+      margin-top: 2em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="شعار المطعم" class="logo" />
+    <h1>مطعم ريدان المندي</h1>
+  </header>
+
+  <main>
+    <section class="menu-section">
+      <h2>قائمة الدجاج</h2>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/400x200?text=مندي+دجاج" alt="مندي دجاج" />
+        <h3>مندي دجاج</h3>
+        <p>30 درهم</p>
+        <button onclick="addToCart('مندي دجاج', 30)">أضف للسلة</button>
+      </div>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/400x200?text=مظبي+دجاج" alt="مظبي دجاج" />
+        <h3>مظبي دجاج</h3>
+        <p>33 درهم</p>
+        <button onclick="addToCart('مظبي دجاج', 33)">أضف للسلة</button>
+      </div>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/400x200?text=مدفون+دجاج" alt="مدفون دجاج" />
+        <h3>مدفون دجاج</h3>
+        <p>33 درهم</p>
+        <button onclick="addToCart('مدفون دجاج', 33)">أضف للسلة</button>
+      </div>
+    </section>
+
+    <section class="menu-section">
+      <h2>قائمة اللحم</h2>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/400x200?text=مندي+لحم" alt="مندي لحم" />
+        <h3>مندي لحم</h3>
+        <p>55 درهم</p>
+        <button onclick="addToCart('مندي لحم', 55)">أضف للسلة</button>
+      </div>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/400x200?text=مظبي+لحم" alt="مظبي لحم" />
+        <h3>مظبي لحم</h3>
+        <p>60 درهم</p>
+        <button onclick="addToCart('مظبي لحم', 60)">أضف للسلة</button>
+      </div>
+      <div class="product-card">
+        <img src="https://via.placeholder.com/400x200?text=مدفون+لحم" alt="مدفون لحم" />
+        <h3>مدفون لحم</h3>
+        <p>السعر عند الطلب</p>
+        <button onclick="addToCart('مدفون لحم', 0)">أضف للسلة</button>
+      </div>
+    </section>
+
+    <section class="cart">
+      <h2>سلة المشتريات</h2>
+      <ul id="cart-items"></ul>
+      <p id="total-price">الإجمالي: 0 درهم</p>
+      <a id="whatsapp-link" href="#" target="_blank" class="whatsapp-button">طلب عبر واتساب</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 مطعم ريدان المندي</p>
+  </footer>
+
+  <script>
+    let cart = [];
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      renderCart();
+    }
+
+    function renderCart() {
+      const cartList = document.getElementById('cart-items');
+      const totalPrice = document.getElementById('total-price');
+      const whatsappLink = document.getElementById('whatsapp-link');
+
+      cartList.innerHTML = '';
+      let total = 0;
+      let message = 'مرحباً، أود طلب:\n';
+
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - ${item.price} درهم`;
+        cartList.appendChild(li);
+        total += item.price;
+        message += `• ${item.name} - ${item.price} درهم\n`;
+      });
+
+      totalPrice.textContent = `الإجمالي: ${total} درهم`;
+      message += `\nالإجمالي: ${total} درهم`;
+
+      const whatsappNumber = '0581505066';
+      whatsappLink.href = `https://wa.me/971${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    }
+  </script>
+</body>
+</html>
