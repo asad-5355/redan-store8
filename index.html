@@ -1,399 +1,460 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تلوين رسومات كرتون للأطفال</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مطعم ريدان للمندي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+    }
 
-        body {
-            background-color: #f9f9f9;
-            color: #333;
-        }
+    body {
+      background: #f9f9f9; 
+      color: #333;
+    }
 
-        header {
-            background-color: #ff6b6b;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-        }
+    header {
+      background: linear-gradient(135deg, #d9534f, #e67e22);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    nav {
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
 
-        .gallery h2, .coloring-area h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
+    nav a {
+      color: #d9534f;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-        .thumbnails {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+    .lang-switch {
+      float: left;
+      margin-left: 20px;
+    }
 
-        .thumbnail {
-            border: 3px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s, border-color 0.3s;
-        }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px 20px;
+    }
 
-        .thumbnail:hover {
-            transform: scale(1.05);
-            border-color: #ff6b6b;
-        }
+    .branch-select {
+      text-align: center;
+      margin-bottom: 30px;
+    }
 
-        .thumbnail img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+    .branch-select select {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
 
-        .coloring-area {
-            display: none;
-        }
+    .categories {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
 
-        .coloring-area.active {
-            display: block;
-        }
+    .category-btn {
+      padding: 10px 20px;
+      background: #eee;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+    }
 
-        .tools {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
+    .category-btn.active {
+      background: #d9534f;
+      color: white;
+    }
 
-        .color-picker {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 15px;
-            justify-content: center;
-        }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
 
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            background-color: white;
-        }
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
 
-        #canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            cursor: crosshair;
-            z-index: 10;
-        }
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
 
-        #coloring-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
 
-        button {
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
+    .product-info {
+      padding: 20px;
+    }
 
-        button:hover {
-            background-color: #ff5252;
-        }
+    .product-info h3 {
+      color: #d9534f;
+      margin-bottom: 10px;
+    }
 
-        input[type="color"] {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-        }
+    .product-info p {
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
 
-        input[type="range"] {
-            width: 150px;
-            cursor: pointer;
-        }
+    .product-info .price {
+      font-weight: bold;
+    }
 
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            background-color: #333;
-            color: white;
-            margin-top: 30px;
-        }
+    .add-to-cart {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+    }
 
-        .hidden {
-            display: none;
-        }
+    .add-to-cart:hover {
+      background: #218838;
+    }
 
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .thumbnails {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-            
-            .color-picker {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+    .cart {
+      background: #fff8f0;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 40px;
+    }
+
+    .cart h2 {
+      color: #d9534f;
+      margin-bottom: 20px;
+    }
+
+    .cart-items {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1x solid #eee;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-name {
+      flex: 1;
+    }
+
+    .item-price {
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .item-qty {
+      margin-right: 10px;
+    }
+
+    .remove-btn {
+      color: red;
+      cursor: pointer;
+    }
+
+    .total-section {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff3cd;
+      border-radius: 5px;
+      text-align: right;
+    }
+
+    .total-section strong {
+      color: #d9534f;
+    }
+
+    .checkout-btn {
+      background: #d9534f;
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .checkout-btn:hover {
+      background: #c9302c;
+    }
+
+    footer {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>موقع تلوين الرسومات للأطفال</h1>
-        <p>اختر رسوماتك المفضلة ولونها بالطريقة التي تحبها!</p>
-    </header>
 
-    <div class="container">
-        <section class="gallery">
-            <h2>اختر رسومات للتلوين</h2>
-            <div class="thumbnails" id="thumbnails-container">
-                <!-- سيتم إضافة الصور المصغرة هنا عبر JavaScript -->
-            </div>
-        </section>
+<!-- Header -->
+<header>
+  <button class="lang-switch" onclick="toggleLang()">عربي/English</button>
+  <h1>مطعم ريدان للمندي</h1>
+  <p id="tagline">أفضل مندي في الإمارات العربية المتحدة</p>
+</header>
 
-        <section class="coloring-area hidden" id="coloring-area">
-            <div class="tools">
-                <h2>أدوات التلوين</h2>
-                <div class="color-picker">
-                    <input type="color" id="color" value="#ff0000">
-                    <input type="range" id="brush-size" min="1" max="50" value="5">
-                    <span id="brush-size-value">5px</span>
-                    <button id="clear">مسح اللوحة</button>
-                    <button id="save">حفظ الرسمة</button>
-                    <button id="back">العودة للمعرض</button>
-                </div>
-            </div>
-            <div class="canvas-container">
-                <canvas id="canvas"></canvas>
-                <img id="coloring-image" src="" alt="صورة للتلوين">
-            </div>
-        </section>
+<!-- Navigation -->
+<nav>
+  <a href="#products">القائمة</a>
+  <a href="#cart">سلة المشتريات</a>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+
+  <!-- Branch Selection -->
+  <div class="branch-select">
+    <label for="branchSelect">اختر الفرع:</label>
+    <select id="branchSelect">
+      <option value="ridan">مطعم ريدان - دبي</option>
+      <option value="wadi">وادي ريدان - الشارقة</option>
+    </select>
+  </div>
+
+  <!-- Categories -->
+  <div class="categories">
+    <button class="category-btn active" data-category="all">كل الأصناف</button>
+    <button class="category-btn" data-category="chicken">دجاج</button>
+    <button class="category-btn" data-category="meat">لحم</button>
+    <button class="category-btn" data-category="salads">سلطات</button>
+    <button class="category-btn" data-category="desserts">حلويات</button>
+    <button class="category-btn" data-category="drinks">مشروبات</button>
+    <button class="category-btn" data-category="sheep">ذبائح</button>
+  </div>
+
+  <!-- Products Section -->
+  <section id="products">
+    <h2 style="text-align:center; margin-bottom: 30px;" id="menuTitle">قائمة الطعام</h2>
+    <div class="products" id="productList"></div>
+  </section>
+
+  <!-- Cart Section -->
+  <section id="cart" class="cart">
+    <h2 id="cartTitle">سلة المشتريات</h2>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="total-section">
+      <p id="subtotalText">المجموع قبل التوصيل: <span id="subtotal">0</span> درهم</p>
+      <p id="deliveryText">رسوم التوصيل: 8 درهم</p>
+      <p><strong id="totalText">الإجمالي النهائي:</strong> <span id="finalTotal">8</span> درهم</p>
     </div>
+    <button class="checkout-btn" onclick="sendOrder()" id="checkoutBtn">إرسال الطلب على الواتساب</button>
+  </section>
 
-    <footer>
-        <p>© 2023 موقع تلوين للأطفال - جميع الحقوق محفوظة</p>
-    </footer>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // صور التلوين (يمكنك إضافة المزيد)
-            const coloringPages = [
-                { id: 1, name: 'قطة لطيفة', image: 'https://i.imgur.com/JmYQ8Qy.png', thumb: 'https://i.imgur.com/JmYQ8Qy_th.jpg' },
-                { id: 2, name: 'كلب مرح', image: 'https://i.imgur.com/XyZ9ABb.png', thumb: 'https://i.imgur.com/XyZ9ABb_th.jpg' },
-                { id: 3, name: 'فراشة جميلة', image: 'https://i.imgur.com/KLmY4PQ.png', thumb: 'https://i.imgur.com/KLmY4PQ_th.jpg' },
-                { id: 4, name: 'سيارة سباق', image: 'https://i.imgur.com/QwErYcT.png', thumb: 'https://i.imgur.com/QwErYcT_th.jpg' },
-                { id: 5, name: 'قلعة سحرية', image: 'https://i.imgur.com/MnOpQxR.png', thumb: 'https://i.imgur.com/MnOpQxR_th.jpg' },
-                { id: 6, name: 'ديناصور لطيف', image: 'https://i.imgur.com/VwXyZ9A.png', thumb: 'https://i.imgur.com/VwXyZ9A_th.jpg' }
-            ];
+<!-- Footer -->
+<footer>
+  &copy; 2025 مطعم ريدان للمندي | جميع الحقوق محفوظة
+</footer>
 
-            // عناصر DOM
-            const thumbnailsContainer = document.getElementById('thumbnails-container');
-            const coloringArea = document.getElementById('coloring-area');
-            const gallery = document.querySelector('.gallery');
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            const coloringImage = document.getElementById('coloring-image');
-            const colorPicker = document.getElementById('color');
-            const brushSize = document.getElementById('brush-size');
-            const brushSizeValue = document.getElementById('brush-size-value');
-            const clearBtn = document.getElementById('clear');
-            const saveBtn = document.getElementById('save');
-            const backBtn = document.getElementById('back');
+<script>
+  const cart = [];
+  const branchNumbers = {
+    ridan: "971588155123",
+    wadi: "971565910681"
+  };
 
-            // متغيرات الرسم
-            let isDrawing = false;
-            let currentColor = colorPicker.value;
-            let currentBrushSize = brushSize.value;
+  const products = [
+    // دجاج
+    { category: 'chicken', name: 'مندي دجاج', price: 30 },
+    { category: 'chicken', name: 'مظبي دجاج', price: 33 },
+    { category: 'chicken', name: 'مدفون دجاج', price: 33 },
+    { category: 'chicken', name: 'محمر دجاج', price: 33 },
+    { category: 'chicken', name: 'عوكه دجاج', price: 40 },
+    { category: 'chicken', name: 'مخمود دجاج', price: 33 },
+    { category: 'chicken', name: 'كبسه دجاج', price: 35 },
+    { category: 'chicken', name: 'حنيذ دجاج', price: 35 },
 
-            // عرض الصور المصغرة
-            function displayThumbnails() {
-                thumbnailsContainer.innerHTML = '';
-                coloringPages.forEach(page => {
-                    const thumbnail = document.createElement('div');
-                    thumbnail.className = 'thumbnail';
-                    thumbnail.innerHTML = `
-                        <img src="${page.thumb}" alt="${page.name}" data-id="${page.id}" data-image="${page.image}">
-                        <p style="text-align: center; padding: 8px;">${page.name}</p>
-                    `;
-                    thumbnailsContainer.appendChild(thumbnail);
-                });
+    // لحم
+    { category: 'meat', name: 'مندي لحم', price: 55 },
+    { category: 'meat', name: 'مظبي لحم', price: 60 },
+    { category: 'meat', name: 'مدفون لحم', price: 60 },
+    { category: 'meat', name: 'كبسه لحم', price: 60 },
+    { category: 'meat', name: 'حنيذ كتف', price: 75 },
+    { category: 'meat', name: 'حنيذ جنب', price: 75 },
+    { category: 'meat', name: 'عوكه لحم', price: 55 },
 
-                // إضافة مستمعي الأحداث للصور المصغرة
-                document.querySelectorAll('.thumbnail img').forEach(img => {
-                    img.addEventListener('click', function() {
-                        const imageUrl = this.getAttribute('data-image');
-                        openColoringPage(imageUrl);
-                    });
-                });
-            }
+    // سلطات
+    { category: 'salads', name: 'فتوش', price: 15 },
+    { category: 'salads', name: 'تبولة', price: 15 },
+    { category: 'salads', name: 'سلطة جرجير', price: 15 },
+    { category: 'salads', name: 'روب خيار', price: 15 },
 
-            // فتح صفحة التلوين
-            function openColoringPage(imageUrl) {
-                coloringImage.src = imageUrl;
-                
-                coloringImage.onload = function() {
-                    // ضبط حجم الكانفاس ليناسب الصورة
-                    canvas.width = coloringImage.width;
-                    canvas.height = coloringImage.height;
-                    
-                    // مسح الكانفاس
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
-                    // عرض منطقة التلوين وإخفاء المعرض
-                    gallery.classList.add('hidden');
-                    coloringArea.classList.remove('hidden');
-                    coloringArea.classList.add('active');
-                };
-            }
+    // حلويات
+    { category: 'desserts', name: 'كنافة قشطة', price: 15 },
+    { category: 'desserts', name: 'كنافة جبن', price: 15 },
+    { category: 'desserts', name: 'كنافة شوكولاتة', price: 16 },
+    { category: 'desserts', name: 'معصوب ملكي', price: 27 },
+    { category: 'desserts', name: 'عريكة', price: 30 },
+    { category: 'desserts', name: 'فته تمر', price: 16 },
+    { category: 'desserts', name: 'فته مكس', price: 16 },
 
-            // العودة إلى المعرض
-            function backToGallery() {
-                gallery.classList.remove('hidden');
-                coloringArea.classList.remove('active');
-                coloringArea.classList.add('hidden');
-            }
+    // مشروبات
+    { category: 'drinks', name: 'ماء صغير', price: 3 },
+    { category: 'drinks', name: 'ماء كبير', price: 4 },
+    { category: 'drinks', name: 'بيبسي', price: 4 },
+    { category: 'drinks', name: 'سفن أب', price: 4 },
+    { category: 'drinks', name: 'ديو', price: 4 },
+    { category: 'drinks', name: 'ميرندا', price: 4 },
 
-            // أحداث الكانفاس للرسم
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseout', stopDrawing);
+    // ذبائح
+    { category: 'sheep', name: 'ذبيحة مندي', price: 800, extraPlate: 26 },
+    { category: 'sheep', name: 'ذبيحة مظبي', price: 800, extraPlate: 26 },
+    { category: 'sheep', name: 'ذبيحة حنيذ', price: 900, extraPlate: 26 },
+  ];
 
-            // أحداث للشاشات التي تعمل باللمس
-            canvas.addEventListener('touchstart', handleTouchStart);
-            canvas.addEventListener('touchmove', handleTouchMove);
-            canvas.addEventListener('touchend', handleTouchEnd);
+  function renderProducts(category = 'all') {
+    const list = document.getElementById("productList");
+    list.innerHTML = "";
+    products.filter(p => category === 'all' || p.category === category).forEach((prod, i) => {
+      const imageId = i + 1;
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img src="https://picsum.photos/id/${imageId}/600/400"  alt="${prod.name}">
+        <div class="product-info">
+          <h3>${prod.name}</h3>
+          <p>${prod.price} درهم</p>
+          ${prod.extraPlate ? `<input type="number" id="plates-${i}" placeholder="عدد الصينيات الإضافية" min="0" max="4" value="0"><br>` : ''}
+          <button class="add-to-cart" onclick="addToCart('${prod.name}', ${prod.price}, ${prod.extraPlate || 0}, ${prod.extraPlate ? i : -1})">إضافة إلى السلة</button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
 
-            function startDrawing(e) {
-                isDrawing = true;
-                draw(e);
-            }
+  function addToCart(name, basePrice, extraPrice = 0, plateIndex = -1) {
+    let qty = 1;
+    let extraQty = 0;
+    if (plateIndex >= 0) {
+      extraQty = parseInt(document.getElementById(`plates-${plateIndex}`).value) || 0;
+    }
+    const totalPrice = basePrice + (extraPrice * extraQty);
+    cart.push({ name, price: totalPrice, qty });
+    updateCart();
+  }
 
-            function draw(e) {
-                if (!isDrawing) return;
-                
-                ctx.strokeStyle = currentColor;
-                ctx.lineJoin = 'round';
-                ctx.lineCap = 'round';
-                ctx.lineWidth = currentBrushSize;
-                
-                // الحصول على إحداثيات المؤشر
-                let x, y;
-                if (e.type.includes('touch')) {
-                    const rect = canvas.getBoundingClientRect();
-                    x = e.touches[0].clientX - rect.left;
-                    y = e.touches[0].clientY - rect.top;
-                } else {
-                    x = e.offsetX;
-                    y = e.offsetY;
-                }
-                
-                ctx.lineTo(x, y);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(x, y);
-            }
+  function updateCart() {
+    const cartItemsDiv = document.getElementById("cartItems");
+    cartItemsDiv.innerHTML = "";
+    let subtotal = 0;
 
-            function stopDrawing() {
-                isDrawing = false;
-                ctx.beginPath();
-            }
+    cart.forEach((item, index) => {
+      subtotal += item.price * item.qty;
+      const div = document.createElement("div");
+      div.className = "cart-item";
+      div.innerHTML = `
+        <span class="item-name">${item.name}</span>
+        <span class="item-qty">×${item.qty}</span>
+        <span class="item-price">${item.price} درهم</span>
+        <span class="remove-btn" onclick="removeItem(${index})">✖️</span>
+      `;
+      cartItemsDiv.appendChild(div);
+    });
 
-            function handleTouchStart(e) {
-                e.preventDefault();
-                startDrawing(e.touches[0]);
-            }
+    const delivery = 8;
+    const total = subtotal + delivery;
 
-            function handleTouchMove(e) {
-                e.preventDefault();
-                draw(e.touches[0]);
-            }
+    document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+    document.getElementById("finalTotal").textContent = total.toFixed(2);
+  }
 
-            function handleTouchEnd(e) {
-                e.preventDefault();
-                stopDrawing();
-            }
+  function removeItem(index) {
+    cart.splice(index, 1);
+    updateCart();
+  }
 
-            // تحديث حجم الفرشاة
-            brushSize.addEventListener('input', function() {
-                currentBrushSize = this.value;
-                brushSizeValue.textContent = `${this.value}px`;
-            });
+  function sendOrder() {
+    const branch = document.getElementById("branchSelect").value;
+    const whatsappNumber = branchNumbers[branch];
 
-            // تحديث لون الفرشاة
-            colorPicker.addEventListener('input', function() {
-                currentColor = this.value;
-            });
+    let order = `فرع: ${branch === 'ridan' ? 'مطعم ريدان - دبي' : 'وادي ريدان - الشارقة'}\n`;
+    order += `الطلب:\n`;
 
-            // مسح اللوحة
-            clearBtn.addEventListener('click', function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            });
+    cart.forEach(item => {
+      order += `- ${item.name} × ${item.qty} (${item.price} درهم)\n`;
+    });
 
-            // حفظ الرسمة
-            saveBtn.addEventListener('click', function() {
-                // دمج الكانفاس مع الصورة الأساسية
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = canvas.width;
-                tempCanvas.height = canvas.height;
-                const tempCtx = tempCanvas.getContext('2d');
-                
-                // رسم الصورة الأصلية أولاً
-                tempCtx.drawImage(coloringImage, 0, 0);
-                
-                // ثم رسم التلوين فوقها
-                tempCtx.drawImage(canvas, 0, 0);
-                
-                // إنشاء رابط للتحميل
-                const link = document.createElement('a');
-                link.download = 'رسمتي-الملوونة.png';
-                link.href = tempCanvas.toDataURL('image/png');
-                link.click();
-            });
+    order += `\nالمجموع: ${document.getElementById("finalTotal").textContent} درهم\n`;
+    order += `\nشكراً لطلبك من ريدان للمندي!`;
 
-            // زر العودة
-            backBtn.addEventListener('click', backToGallery);
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(order)}`;
+    window.open(url, '_blank');
+  }
 
-            // تهيئة التطبيق
-            displayThumbnails();
-        });
-    </script>
+  document.querySelectorAll(".category-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderProducts(btn.getAttribute("data-category"));
+    });
+  });
+
+  function toggleLang() {
+    const ar = document.documentElement.getAttribute("dir") === "rtl";
+    document.documentElement.setAttribute("dir", ar ? "ltr" : "rtl");
+
+    document.getElementById("tagline").textContent = ar ? "Best Mandi in UAE" : "أفضل مندي في الإمارات";
+    document.getElementById("menuTitle").textContent = ar ? "Menu" : "قائمة الطعام";
+    document.getElementById("cartTitle").textContent = ar ? "Shopping Cart" : "سلة المشتريات";
+    document.getElementById("subtotalText").innerHTML = ar ? "Subtotal: <span id='subtotal'>0</span> AED" : "المجموع قبل التوصيل: <span id='subtotal'>0</span> درهم";
+    document.getElementById("deliveryText").textContent = ar ? "Delivery Fee: 8 AED" : "رسوم التوصيل: 8 درهم";
+    document.getElementById("totalText").textContent = ar ? "Final Total:" : "الإجمالي النهائي:";
+    document.getElementById("checkoutBtn").textContent = ar ? "Send Order on WhatsApp" : "إرسال الطلب على الواتساب";
+  }
+
+  // Initial render
+  renderProducts();
+</script>
+
 </body>
 </html>
