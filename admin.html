@@ -788,7 +788,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // تهيئة Supabase
+        // تهيئة Supabase - استبدل هذه القيم بمفاتيح مشروعك
         const supabaseUrl = 'https://mhragdzdcdaqtipvrogl.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ocmFnZHpkY2RhcXRpcHZyb2dsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAwMzQwNTMsImV4cCI6MjA2NTYxMDA1M30.Qt2Lj7lcGJ2hwHaF9TJOwlN1Gwf00DjtdkJL9JoK-dA';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -813,122 +813,92 @@
         const updateOrderStatus = document.getElementById('updateOrderStatus');
         const orderStatus = document.getElementById('orderStatus');
         
-        // تغيير التبويبات
-        menuItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const tabId = item.dataset.tab;
-                
-                menuItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                
-                tabContents.forEach(content => content.classList.remove('active'));
-                document.getElementById(tabId).classList.add('active');
-            });
+        // تحميل البيانات عند بدء التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            initEventListeners();
+            loadDashboardData();
+            loadOrders();
+            loadProducts();
+            loadCategories();
+            loadCustomers();
+            loadSettings();
         });
         
-        // تغيير حالة الطلبات
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                if (!tab.classList.contains('tab')) return;
-                
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                const status = tab.dataset.status;
-                loadOrders(status);
-            });
-        });
-        
-        // فتح/إغلاق Modal المنتج
-        addProductBtn.addEventListener('click', () => {
-            document.getElementById('productModalTitle').textContent = 'إضافة منتج جديد';
-            document.getElementById('productId').value = '';
-            productForm.reset();
-            loadCategoriesForSelect();
-            productModal.classList.add('active');
-        });
-        
-        closeProductModal.addEventListener('click', () => {
-            productModal.classList.remove('active');
-        });
-        
-        cancelProduct.addEventListener('click', () => {
-            productModal.classList.remove('active');
-        });
-        
-        // فتح/إغلاق Modal الفئة
-        addCategoryBtn.addEventListener('click', () => {
-            document.getElementById('categoryModalTitle').textContent = 'إضافة فئة جديدة';
-            document.getElementById('categoryId').value = '';
-            categoryForm.reset();
-            categoryModal.classList.add('active');
-        });
-        
-        closeCategoryModal.addEventListener('click', () => {
-            categoryModal.classList.remove('active');
-        });
-        
-        cancelCategory.addEventListener('click', () => {
-            categoryModal.classList.remove('active');
-        });
-        
-        // فتح/إغلاق Modal الطلب
-        closeOrderModal.addEventListener('click', () => {
-            orderModal.classList.remove('active');
-        });
-        
-        cancelOrder.addEventListener('click', () => {
-            orderModal.classList.remove('active');
-        });
-        
-        // تحديث حالة الطلب
-        updateOrderStatus.addEventListener('click', async () => {
-            const orderId = orderModal.dataset.orderId;
-            const status = orderStatus.value;
-            
-            try {
-                const { data, error } = await supabase
-                    .from('orders')
-                    .update({ status: status })
-                    .eq('id', orderId)
-                    .select();
-                
-                if (error) throw error;
-                
-                alert('تم تحديث حالة الطلب بنجاح');
-                orderModal.classList.remove('active');
-                loadOrders(document.querySelector('.tab.active').dataset.status);
-                loadDashboardData();
-            } catch (error) {
-                console.error('Error updating order status:', error);
-                alert('حدث خطأ أثناء تحديث حالة الطلب');
-            }
-        });
-        
-        // تحميل الفئات لـ select
-        async function loadCategoriesForSelect() {
-            try {
-                const { data, error } = await supabase
-                    .from('categories')
-                    .select('*');
-                
-                if (error) throw error;
-                
-                const select = document.getElementById('productCategory');
-                select.innerHTML = '';
-                
-                data.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category.id;
-                    option.textContent = category.name;
-                    select.appendChild(option);
+        // تهيئة مستمعي الأحداث
+        function initEventListeners() {
+            // تغيير التبويبات
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const tabId = item.dataset.tab;
+                    
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
                 });
-            } catch (error) {
-                console.error('Error loading categories:', error);
-            }
+            });
+            
+            // تغيير حالة الطلبات
+            tabs.forEach(tab => {
+                if (tab.classList.contains('tab')) {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        loadOrders(tab.dataset.status);
+                    });
+                }
+            });
+            
+            // أحداث منتجات
+            addProductBtn.addEventListener('click', () => {
+                document.getElementById('productModalTitle').textContent = 'إضافة منتج جديد';
+                document.getElementById('productId').value = '';
+                productForm.reset();
+                loadCategoriesForSelect();
+                productModal.classList.add('active');
+            });
+            
+            closeProductModal.addEventListener('click', () => productModal.classList.remove('active'));
+            cancelProduct.addEventListener('click', () => productModal.classList.remove('active'));
+            
+            productForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await saveProduct();
+            });
+            
+            // أحداث فئات
+            addCategoryBtn.addEventListener('click', () => {
+                document.getElementById('categoryModalTitle').textContent = 'إضافة فئة جديدة';
+                document.getElementById('categoryId').value = '';
+                categoryForm.reset();
+                categoryModal.classList.add('active');
+            });
+            
+            closeCategoryModal.addEventListener('click', () => categoryModal.classList.remove('active'));
+            cancelCategory.addEventListener('click', () => categoryModal.classList.remove('active'));
+            
+            categoryForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await saveCategory();
+            });
+            
+            // أحداث الطلبات
+            closeOrderModal.addEventListener('click', () => orderModal.classList.remove('active'));
+            cancelOrder.addEventListener('click', () => orderModal.classList.remove('active'));
+            
+            updateOrderStatus.addEventListener('click', async () => {
+                await updateOrder();
+            });
+            
+            // أحداث الإعدادات
+            document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await saveSettings();
+            });
         }
         
-        // تحميل بيانات لوحة التحكم
+        // تحميل لوحة التحكم
         async function loadDashboardData() {
             try {
                 // عدد الطلبات الجديدة
@@ -952,7 +922,7 @@
                     .from('orders')
                     .select('total')
                     .gte('created_at', `${today}T00:00:00`)
-                    .lte('created_at', `${today}T23:59:59`);
+                    .lte('created_at', `${today}T23:59:59');
                 
                 const todayRevenue = todayRevenueData?.reduce((sum, order) => sum + order.total, 0) || 0;
                 document.getElementById('todayRevenue').textContent = todayRevenue.toFixed(2);
@@ -962,7 +932,7 @@
                     .from('customers')
                     .select('*', { count: 'exact', head: true })
                     .gte('created_at', `${today}T00:00:00`)
-                    .lte('created_at', `${today}T23:59:59`);
+                    .lte('created_at', `${today}T23:59:59');
                 
                 document.getElementById('newCustomersCount').textContent = newCustomersCount || 0;
                 
@@ -973,35 +943,11 @@
                     .order('created_at', { ascending: false })
                     .limit(5);
                 
-                const tbody = document.querySelector('#recentOrdersTable tbody');
-                tbody.innerHTML = '';
-                
-                if (recentOrders && recentOrders.length > 0) {
-                    recentOrders.forEach(order => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>#${order.id}</td>
-                            <td>${order.customer_name}</td>
-                            <td>${new Date(order.created_at).toLocaleDateString()}</td>
-                            <td>${order.total.toFixed(2)} درهم</td>
-                            <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
-                            <td>
-                                <button class="action-btn view-order" data-id="${order.id}"><i class="fas fa-eye"></i></button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                    
-                    // إضافة أحداث لعرض تفاصيل الطلب
-                    document.querySelectorAll('.view-order').forEach(btn => {
-                        btn.addEventListener('click', () => viewOrderDetails(btn.dataset.id));
-                    });
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">لا توجد طلبات</td></tr>';
-                }
+                renderOrdersTable('#recentOrdersTable tbody', recentOrders);
                 
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
+                alert('حدث خطأ أثناء تحميل بيانات لوحة التحكم');
             }
         }
         
@@ -1021,36 +967,42 @@
                 
                 if (error) throw error;
                 
-                const tbody = document.querySelector('#ordersTable tbody');
-                tbody.innerHTML = '';
-                
-                if (orders && orders.length > 0) {
-                    orders.forEach(order => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>#${order.id}</td>
-                            <td>${order.customer_name}</td>
-                            <td>${order.customer_phone}</td>
-                            <td>${order.customer_address.substring(0, 20)}...</td>
-                            <td>${order.total.toFixed(2)} درهم</td>
-                            <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
-                            <td>
-                                <button class="action-btn view-order" data-id="${order.id}"><i class="fas fa-eye"></i></button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                    
-                    // إضافة أحداث لعرض تفاصيل الطلب
-                    document.querySelectorAll('.view-order').forEach(btn => {
-                        btn.addEventListener('click', () => viewOrderDetails(btn.dataset.id));
-                    });
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">لا توجد طلبات</td></tr>';
-                }
+                renderOrdersTable('#ordersTable tbody', orders);
                 
             } catch (error) {
                 console.error('Error loading orders:', error);
+                alert('حدث خطأ أثناء تحميل الطلبات');
+            }
+        }
+        
+        // عرض الطلبات في الجدول
+        function renderOrdersTable(selector, orders) {
+            const tbody = document.querySelector(selector);
+            tbody.innerHTML = '';
+            
+            if (orders && orders.length > 0) {
+                orders.forEach(order => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>#${order.id}</td>
+                        <td>${order.customer_name}</td>
+                        <td>${order.customer_phone}</td>
+                        <td>${order.customer_address.substring(0, 20)}...</td>
+                        <td>${order.total.toFixed(2)} درهم</td>
+                        <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
+                        <td>
+                            <button class="action-btn view-order" data-id="${order.id}"><i class="fas fa-eye"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                
+                // إضافة أحداث لعرض تفاصيل الطلب
+                document.querySelectorAll('.view-order').forEach(btn => {
+                    btn.addEventListener('click', () => viewOrderDetails(btn.dataset.id));
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">لا توجد طلبات</td></tr>';
             }
         }
         
@@ -1100,6 +1052,30 @@
             }
         }
         
+        // تحديث حالة الطلب
+        async function updateOrder() {
+            const orderId = orderModal.dataset.orderId;
+            const status = orderStatus.value;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('orders')
+                    .update({ status: status })
+                    .eq('id', orderId)
+                    .select();
+                
+                if (error) throw error;
+                
+                alert('تم تحديث حالة الطلب بنجاح');
+                orderModal.classList.remove('active');
+                loadOrders(document.querySelector('.tab.active').dataset.status);
+                loadDashboardData();
+            } catch (error) {
+                console.error('Error updating order status:', error);
+                alert('حدث خطأ أثناء تحديث حالة الطلب');
+            }
+        }
+        
         // تحميل المنتجات
         async function loadProducts() {
             try {
@@ -1143,6 +1119,30 @@
                 
             } catch (error) {
                 console.error('Error loading products:', error);
+                alert('حدث خطأ أثناء تحميل المنتجات');
+            }
+        }
+        
+        // تحميل الفئات لـ select
+        async function loadCategoriesForSelect() {
+            try {
+                const { data, error } = await supabase
+                    .from('categories')
+                    .select('*');
+                
+                if (error) throw error;
+                
+                const select = document.getElementById('productCategory');
+                select.innerHTML = '';
+                
+                data.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading categories:', error);
             }
         }
         
@@ -1186,6 +1186,7 @@
                 
             } catch (error) {
                 console.error('Error loading categories:', error);
+                alert('حدث خطأ أثناء تحميل الفئات');
             }
         }
         
@@ -1221,6 +1222,7 @@
                 
             } catch (error) {
                 console.error('Error loading customers:', error);
+                alert('حدث خطأ أثناء تحميل العملاء');
             }
         }
         
@@ -1245,6 +1247,7 @@
                 
             } catch (error) {
                 console.error('Error loading settings:', error);
+                alert('حدث خطأ أثناء تحميل الإعدادات');
             }
         }
         
@@ -1345,9 +1348,7 @@
         }
         
         // حفظ المنتج
-        productForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
+        async function saveProduct() {
             const productId = document.getElementById('productId').value;
             const productData = {
                 name: document.getElementById('productName').value,
@@ -1387,12 +1388,10 @@
                 console.error('Error saving product:', error);
                 alert('حدث خطأ أثناء حفظ المنتج');
             }
-        });
+        }
         
         // حفظ الفئة
-        categoryForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
+        async function saveCategory() {
             const categoryId = document.getElementById('categoryId').value;
             const categoryData = {
                 name: document.getElementById('categoryName').value,
@@ -1428,12 +1427,10 @@
                 console.error('Error saving category:', error);
                 alert('حدث خطأ أثناء حفظ الفئة');
             }
-        });
+        }
         
         // حفظ الإعدادات
-        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
+        async function saveSettings() {
             const settingsData = {
                 restaurant_name: document.getElementById('restaurantName').value,
                 delivery_fee: parseFloat(document.getElementById('deliveryFee').value) || 0,
@@ -1456,7 +1453,7 @@
                 console.error('Error saving settings:', error);
                 alert('حدث خطأ أثناء حفظ الإعدادات');
             }
-        });
+        }
         
         // الحصول على نص الحالة
         function getStatusText(status) {
@@ -1469,16 +1466,6 @@
             
             return statusTexts[status] || status;
         }
-        
-        // تحميل البيانات عند بدء التحميل
-        document.addEventListener('DOMContentLoaded', () => {
-            loadDashboardData();
-            loadOrders();
-            loadProducts();
-            loadCategories();
-            loadCustomers();
-            loadSettings();
-        });
     </script>
 </body>
 </html>
